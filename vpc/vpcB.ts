@@ -17,3 +17,4 @@ const vpc = new aws.ec2.Vpc(
 );
 
 export const vpcBId = vpc.id;
+export const vpcB = vpc;
