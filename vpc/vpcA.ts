@@ -47,7 +47,7 @@ const publicSubnetRouteTable = new aws.ec2.RouteTable(
       }
     ],
     tags: {
-      Name: "vpc-public-subnet-rt"
+      Name: "vpca-public-subnet-rt"
     }
   },
   {
@@ -56,7 +56,7 @@ const publicSubnetRouteTable = new aws.ec2.RouteTable(
 );
 
 const publicSubnetRTAssociation = new aws.ec2.RouteTableAssociation(
-  "vpc-pub-subnet-rt-association",
+  "vpca-pub-subnet-rt-association",
   {
     subnetId: publicSubnet.id,
     routeTableId: publicSubnetRouteTable.id
@@ -79,17 +79,9 @@ const elasticIp = new aws.ec2.Eip("vpca-natgw-eip", {
   }
 });
 
-const natGW = new aws.ec2.NatGateway("vpca-nat-gw", {
-  subnetId: publicSubnet.id,
-  connectivityType: "public",
-  allocationId: elasticIp.allocationId,
-  tags: {
-    Name: "vpca-nat-gw"
-  }
-});
 
 const privateSubnetRT = new aws.ec2.RouteTable(
-  "vpc-private-subnet-rt",
+  "vpca-private-subnet-rt",
   {
     vpcId: vpc.id,
     routes: [
@@ -100,18 +92,14 @@ const privateSubnetRT = new aws.ec2.RouteTable(
       {
         cidrBlock: vpcB.cidrBlock,
         vpcPeeringConnectionId: peeringConn.id
-      },
-      {
-        cidrBlock: "0.0.0.0/0",
-        natGatewayId: natGW.id
       }
     ],
     tags: {
-      Name: "vpc-private-subnet-rt"
+      Name: "vpca-private-subnet-rt"
     }
   },
   {
-    dependsOn: [natGW, peeringConn]
+    dependsOn: [peeringConn]
   }
 );
 
@@ -125,6 +113,5 @@ const privateSubnetRTSubnetAssociation = new aws.ec2.RouteTableAssociation(
 
 export const vpcAId = vpc.id;
 export const vpcA = vpc;
-export const vpcACidrBlock = vpc.cidrBlock;
 export const vpcApublicSubnetId = publicSubnet.id;
 export const vpcAprivateSubnetId = privateSubnet.id;
