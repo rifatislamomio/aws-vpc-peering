@@ -16,3 +16,5 @@ export const vpcPeeringConnection = new aws.ec2.VpcPeeringConnection(
     dependsOn: [vpcA, vpcB]
   }
 );
+
+export const vpcPeeringId = vpcPeeringConnection.id;

@@ -2,7 +2,6 @@ import * as aws from "@pulumi/aws";
 import { vpcA } from "./vpcA";
 import { vpcPeeringConnection as peeringConn } from "./vpcPeering";
 
-
 const vpc = new aws.ec2.Vpc(
   "vpc-b",
   {
