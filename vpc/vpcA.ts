@@ -115,3 +115,4 @@ export const vpcAId = vpc.id;
 export const vpcA = vpc;
 export const vpcApublicSubnetId = publicSubnet.id;
 export const vpcAprivateSubnetId = privateSubnet.id;
+export const vpcACidrBlock = vpc.cidrBlock;
