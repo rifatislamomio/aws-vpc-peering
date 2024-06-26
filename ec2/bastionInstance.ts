@@ -43,7 +43,7 @@ const ec2KeyPair = new aws.ec2.KeyPair("ec2-kp", {
 });
 
 const bastionInstance = new aws.ec2.Instance("ec2-bastion-instance", {
-  instanceType: "t2.small",
+  instanceType: "t2.micro",
   ami: "ami-04b70fa74e45c3917", //Ubuntu, 24.04 LTS
   keyName: ec2KeyPair.keyName,
   vpcSecurityGroupIds: [bastionServerSG.id],
