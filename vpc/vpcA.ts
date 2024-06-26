@@ -72,14 +72,6 @@ const privateSubnet = new aws.ec2.Subnet("vpca-private-subnet", {
   }
 });
 
-const elasticIp = new aws.ec2.Eip("vpca-natgw-eip", {
-  vpc: true,
-  tags: {
-    Name: "vpca-natgw-eip"
-  }
-});
-
-
 const privateSubnetRT = new aws.ec2.RouteTable(
   "vpca-private-subnet-rt",
   {
