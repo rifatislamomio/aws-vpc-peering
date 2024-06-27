@@ -1,14 +1,11 @@
 import * as aws from "@pulumi/aws";
 import * as dotenv from "dotenv";
-import {
-  vpcAId,
-  vpcAprivateSubnetId
-} from "../vpc/vpcA";
+import { vpcA, vpcAprivateSubnetId } from "../vpc/vpcA";
 
 dotenv.config();
 
 const primaryServerSG = new aws.ec2.SecurityGroup("ec2-primary-sg", {
-  vpcId: vpcAId,
+  vpcId: vpcA.id,
   description: "Allowing SSH and HTTP only",
   ingress: [
     {
@@ -42,15 +39,22 @@ const ec2KeyPair = new aws.ec2.KeyPair("ec2-dev-kp", {
   publicKey: process.env.PUBLIC_KEY!
 });
 
-const primaryInstance = new aws.ec2.Instance("ec2-primary-instance", {
-  instanceType: "t2.small",
-  ami: "ami-04b70fa74e45c3917", //Ubuntu, 24.04 LTS
-  keyName: ec2KeyPair.keyName,
-  vpcSecurityGroupIds: [primaryServerSG.id],
-  subnetId: vpcAprivateSubnetId,
-  tags: {
-    Name: "ec2-primary-instance"
+const primaryInstance = new aws.ec2.Instance(
+  "ec2-primary-instance",
+  {
+    instanceType: "t2.small",
+    ami: "ami-04b70fa74e45c3917", //Ubuntu, 24.04 LTS
+    keyName: ec2KeyPair.keyName,
+    vpcSecurityGroupIds: [primaryServerSG.id],
+    subnetId: vpcAprivateSubnetId,
+    tags: {
+      Name: "ec2-primary-instance"
+    }
+  },
+  {
+    dependsOn: [vpcA, primaryServerSG]
   }
-});
+);
 
-export const primaryInstanceArn = primaryInstance.arn;
+export const primaryInstanceId = primaryInstance.id;
+
