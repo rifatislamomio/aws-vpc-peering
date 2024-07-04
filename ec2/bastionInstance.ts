@@ -28,8 +28,8 @@ const bastionServerSG = new aws.ec2.SecurityGroup("ec2-bastion-sg", {
   }
 });
 
-const ec2KeyPair = new aws.ec2.KeyPair("ec2-kp", {
-  keyName: "ec2-key-pair",
+const ec2KeyPair = new aws.ec2.KeyPair("ec2-key-pair-bastion", {
+  keyName: "ec2-key-pair-bastion",
   publicKey: process.env.PUBLIC_KEY!
 });
 
@@ -37,7 +37,7 @@ const bastionInstance = new aws.ec2.Instance(
   "ec2-bastion-instance",
   {
     instanceType: "t2.micro",
-    ami: "ami-04b70fa74e45c3917", //Ubuntu, 24.04 LTS
+    ami: "ami-003c463c8207b4dfa", //Ubuntu, 24.04 LTS (region: ap-southeast-1)
     keyName: ec2KeyPair.keyName,
     vpcSecurityGroupIds: [bastionServerSG.id],
     subnetId: vpcApublicSubnetId,

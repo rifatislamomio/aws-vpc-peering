@@ -34,16 +34,16 @@ const primaryServerSG = new aws.ec2.SecurityGroup("ec2-primary-sg", {
   }
 });
 
-const ec2KeyPair = new aws.ec2.KeyPair("ec2-dev-kp", {
-  keyName: "ec2-key-pair",
+const ec2KeyPair = new aws.ec2.KeyPair("ec2-key-pair-primary", {
+  keyName: "ec2-key-pair-primary",
   publicKey: process.env.PUBLIC_KEY!
 });
 
 const primaryInstance = new aws.ec2.Instance(
   "ec2-primary-instance",
   {
-    instanceType: "t2.small",
-    ami: "ami-04b70fa74e45c3917", //Ubuntu, 24.04 LTS
+    instanceType: "t2.micro",
+    ami: "ami-003c463c8207b4dfa", //Ubuntu, 24.04 LTS
     keyName: ec2KeyPair.keyName,
     vpcSecurityGroupIds: [primaryServerSG.id],
     subnetId: vpcAprivateSubnetId,
