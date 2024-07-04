@@ -1,6 +1,6 @@
 import * as aws from "@pulumi/aws";
 import * as dotenv from "dotenv";
-import { vpcB, vpcBprivateSubnetId } from "../vpc/vpcB";
+import { vpcB, vpcBPrivateSubnetId } from "../vpc";
 
 dotenv.config();
 
@@ -46,7 +46,7 @@ const workerInstance = new aws.ec2.Instance(
     ami: "ami-003c463c8207b4dfa", //Ubuntu, 24.04 LTS
     keyName: ec2KeyPair.keyName,
     vpcSecurityGroupIds: [workerServerSG.id],
-    subnetId: vpcBprivateSubnetId,
+    subnetId: vpcBPrivateSubnetId,
     tags: {
       Name: "ec2-worker-instance"
     }

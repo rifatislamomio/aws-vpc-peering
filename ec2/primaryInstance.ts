@@ -1,6 +1,6 @@
 import * as aws from "@pulumi/aws";
 import * as dotenv from "dotenv";
-import { vpcA, vpcAprivateSubnetId } from "../vpc/vpcA";
+import { vpcA, vpcAPrivateSubnetId } from "../vpc";
 
 dotenv.config();
 
@@ -46,7 +46,7 @@ const primaryInstance = new aws.ec2.Instance(
     ami: "ami-003c463c8207b4dfa", //Ubuntu, 24.04 LTS
     keyName: ec2KeyPair.keyName,
     vpcSecurityGroupIds: [primaryServerSG.id],
-    subnetId: vpcAprivateSubnetId,
+    subnetId: vpcAPrivateSubnetId,
     tags: {
       Name: "ec2-primary-instance"
     }

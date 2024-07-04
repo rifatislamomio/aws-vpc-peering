@@ -1,6 +1,6 @@
 import * as aws from "@pulumi/aws";
 import * as dotenv from "dotenv";
-import { vpcA, vpcApublicSubnetId } from "../vpc/vpcA";
+import { vpcA, vpcAPublicSubnetId } from "../vpc";
 
 dotenv.config();
 
@@ -40,7 +40,7 @@ const bastionInstance = new aws.ec2.Instance(
     ami: "ami-003c463c8207b4dfa", //Ubuntu, 24.04 LTS (region: ap-southeast-1)
     keyName: ec2KeyPair.keyName,
     vpcSecurityGroupIds: [bastionServerSG.id],
-    subnetId: vpcApublicSubnetId,
+    subnetId: vpcAPublicSubnetId,
     tags: {
       Name: "ec2-bastion-instance"
     }
