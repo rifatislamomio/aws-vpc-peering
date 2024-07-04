@@ -1,23 +1,23 @@
 import * as aws from "@pulumi/aws";
 import { vpcA } from "./vpcA";
-import { vpcPeeringConnection as peeringConn } from "./vpcPeering";
+// import {
+//   vpcPeeringConnection as peeringConn,
+//   vpcPeeringId
+// } from "./vpcPeering";
 
-const vpc = new aws.ec2.Vpc(
-  "vpc-b",
-  {
-    cidrBlock: "20.0.0.0/16",
-    enableDnsHostnames: true,
-    enableDnsSupport: true,
-    tags: {
-      Name: "vpc-b"
-    }
+const vpc = new aws.ec2.Vpc("vpc-b", {
+  cidrBlock: "20.0.0.0/16",
+  enableDnsHostnames: true,
+  enableDnsSupport: true,
+  tags: {
+    Name: "vpc-b"
   }
-);
+});
 
 const publicSubnet = new aws.ec2.Subnet("vpcb-public-subnet", {
   vpcId: vpc.id,
   cidrBlock: "20.0.1.0/28",
-  availabilityZone: "us-east-1a",
+  availabilityZone: "ap-southeast-1a",
   mapPublicIpOnLaunch: true,
   tags: {
     Name: "vpcb-public-subnet"
@@ -32,18 +32,18 @@ const igw = new aws.ec2.InternetGateway("vpcb-igw", {
 });
 
 const publicSubnetRouteTable = new aws.ec2.RouteTable(
-  "vpc-pvt-subnet-rt",
+  "vpcb-pvt-subnet-rt",
   {
     vpcId: vpc.id,
     routes: [
       {
-        cidrBlock: vpc.cidrBlock,
+        cidrBlock: "20.0.0.0/16",
         localGatewayId: "local"
       },
-      {
-        cidrBlock: vpcA.cidrBlock,
-        vpcPeeringConnectionId: peeringConn.id
-      },
+      // {
+      //   cidrBlock: "10.0.0.0/16",
+      //   vpcPeeringConnectionId: vpcPeeringId
+      // },
       {
         cidrBlock: "0.0.0.0/0",
         gatewayId: igw.id
@@ -54,22 +54,22 @@ const publicSubnetRouteTable = new aws.ec2.RouteTable(
     }
   },
   {
-    dependsOn: [igw, peeringConn]
+    dependsOn: [vpc, igw] //peeringConn
   }
 );
 
 const publicSubnetRTAssociation = new aws.ec2.RouteTableAssociation(
-  "vpca-pub-subnet-rt-association",
+  "vpcb-pub-subnet-rt-association",
   {
     subnetId: publicSubnet.id,
     routeTableId: publicSubnetRouteTable.id
   }
 );
 
-const privateSubnet = new aws.ec2.Subnet("vpca-private-subnet", {
+const privateSubnet = new aws.ec2.Subnet("vpcb-private-subnet", {
   vpcId: vpc.id,
   cidrBlock: "20.0.2.0/28",
-  availabilityZone: "us-east-1a",
+  availabilityZone: "ap-southeast-1a",
   tags: {
     Name: "vpcb-private-subnet"
   }
@@ -81,7 +81,6 @@ const elasticIp = new aws.ec2.Eip("vpcb-natgw-eip", {
     Name: "vpcb-natgw-eip"
   }
 });
-
 
 const natGW = new aws.ec2.NatGateway("vpcb-nat-gw", {
   subnetId: publicSubnet.id,
@@ -98,16 +97,16 @@ const privateSubnetRT = new aws.ec2.RouteTable(
     vpcId: vpc.id,
     routes: [
       {
-        cidrBlock: vpc.cidrBlock,
+        cidrBlock: "20.0.0.0/16",
         localGatewayId: "local"
       },
-      {
-        cidrBlock: vpcA.cidrBlock,
-        vpcPeeringConnectionId: peeringConn.id
-      },
+      // {
+      //   cidrBlock: "10.0.0.0/16",
+      //   vpcPeeringConnectionId: vpcPeeringId
+      // },
       {
         cidrBlock: "0.0.0.0/0",
-        natGatewayId: natGW.id
+        gatewayId: natGW.id
       }
     ],
     tags: {
@@ -115,7 +114,7 @@ const privateSubnetRT = new aws.ec2.RouteTable(
     }
   },
   {
-    dependsOn: [natGW, peeringConn]
+    dependsOn: [natGW] //peeringConn
   }
 );
 

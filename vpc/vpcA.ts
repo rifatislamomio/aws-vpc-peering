@@ -1,5 +1,8 @@
 import * as aws from "@pulumi/aws";
-import { vpcPeeringConnection as peeringConn } from "./vpcPeering";
+// import {
+//   vpcPeeringConnection as peeringConn,
+//   vpcPeeringId
+// } from "./vpcPeering";
 import { vpcB } from "./vpcB";
 
 const vpc = new aws.ec2.Vpc("vpc-a", {
@@ -14,7 +17,7 @@ const vpc = new aws.ec2.Vpc("vpc-a", {
 const publicSubnet = new aws.ec2.Subnet("vpca-public-subnet", {
   vpcId: vpc.id,
   cidrBlock: "10.0.1.0/24",
-  availabilityZone: "us-east-1a",
+  availabilityZone: "ap-southeast-1a",
   mapPublicIpOnLaunch: true,
   tags: {
     Name: "vpca-public-subnet"
@@ -29,7 +32,7 @@ const igw = new aws.ec2.InternetGateway("vpca-igw", {
 });
 
 const publicSubnetRouteTable = new aws.ec2.RouteTable(
-  "vpc-pvt-subnet-rt",
+  "vpca-pvt-subnet-rt",
   {
     vpcId: vpc.id,
     routes: [
@@ -37,10 +40,10 @@ const publicSubnetRouteTable = new aws.ec2.RouteTable(
         cidrBlock: "10.0.0.0/16",
         localGatewayId: "local"
       },
-      {
-        cidrBlock: vpcB.cidrBlock,
-        vpcPeeringConnectionId: peeringConn.id
-      },
+      // {
+      //   cidrBlock: "20.0.0.0/16",
+      //   vpcPeeringConnectionId: vpcPeeringId
+      // },
       {
         cidrBlock: "0.0.0.0/0",
         gatewayId: igw.id
@@ -51,7 +54,7 @@ const publicSubnetRouteTable = new aws.ec2.RouteTable(
     }
   },
   {
-    dependsOn: [igw, peeringConn]
+    dependsOn: [vpc, igw] //peeringConn
   }
 );
 
@@ -66,7 +69,7 @@ const publicSubnetRTAssociation = new aws.ec2.RouteTableAssociation(
 const privateSubnet = new aws.ec2.Subnet("vpca-private-subnet", {
   vpcId: vpc.id,
   cidrBlock: "10.0.2.0/24",
-  availabilityZone: "us-east-1a",
+  availabilityZone: "ap-southeast-1a",
   tags: {
     Name: "vpca-private-subnet"
   }
@@ -80,18 +83,18 @@ const privateSubnetRT = new aws.ec2.RouteTable(
       {
         cidrBlock: "10.0.0.0/16",
         localGatewayId: "local"
-      },
-      {
-        cidrBlock: vpcB.cidrBlock,
-        vpcPeeringConnectionId: peeringConn.id
       }
+      // {
+      //   cidrBlock: vpcB.cidrBlock,
+      //   vpcPeeringConnectionId: peeringConn.id
+      // }
     ],
     tags: {
       Name: "vpca-private-subnet-rt"
     }
   },
   {
-    dependsOn: [peeringConn]
+    dependsOn: [vpc] //peeringConn
   }
 );
 
