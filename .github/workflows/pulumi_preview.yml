@@ -1,4 +1,4 @@
-name: Infra
+name: Pulumi Preview
 on:
   - pull_request
 jobs:
@@ -10,4 +10,3 @@ jobs:
       - uses: actions/setup-node@v3.5.0
         with:
           node-version-file: package.json
-          
