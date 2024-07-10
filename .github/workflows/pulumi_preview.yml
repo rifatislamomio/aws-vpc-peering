@@ -20,6 +20,6 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: preview
-          stack-name: place-stack-name-here # For org account use org-name/stack-name
+          stack-name: org-name/${{ github.event.pull_request.base.ref }} # Use same stack-names as the target branchs (main/dev)
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
