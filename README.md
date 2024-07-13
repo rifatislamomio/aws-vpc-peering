@@ -17,3 +17,10 @@
   <em align="center">VPC Peering Connection</em>
 </p>
 <br>
+
+
+3. **Configure Github Actions Workflow**:
+   - Provide these following variables as Github Action's environment secrets:
+     1. `AWS_ACCESS_KEY_ID`: Access key id from AWS of AWS IAM user
+     2. `AWS_SECRET_ACCESS_KEY`: Secret access key of AWS IAM user
+     
