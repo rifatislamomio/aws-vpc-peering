@@ -23,4 +23,7 @@
    - Provide these following variables as Github Action's environment secrets:
      1. `AWS_ACCESS_KEY_ID`: Access key id from AWS of AWS IAM user
      2. `AWS_SECRET_ACCESS_KEY`: Secret access key of AWS IAM user
+      ([_To create AWS access key and secret key read this_](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html "_To create AWS access key and secret key read this_"))
      3. `PULUMI_ACCESS_TOKEN`: Personal access tokens token of Pulumi account
+    ([_To create Pulumi personal access token read this_](https://www.pulumi.com/docs/pulumi-cloud/access-management/access-tokens/ "_To create Pulumi personal access token read this_"))
+   
