@@ -21,5 +21,9 @@ jobs:
         with:
           command: preview
           stack-name: org-name/${{ github.event.pull_request.base.ref }} # Use same stack-names as the target branches (main/dev)
+          comment-on-pr: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: infra
+          upsert: true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
